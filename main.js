@@ -54,7 +54,7 @@ async function main() {
     const proxies = fs.readFileSync(proxiesFile, 'utf8').trim().split('\n');
 
     if (privateKeys.length !== proxies.length) {
-        console.error('Добавь одинаковое количество прокси и кошельков');
+        console.error('Add equal wallet - proxy quantity');
         return;
     }
 
@@ -62,6 +62,10 @@ async function main() {
         const privateKey = privateKeys[i].trim();
         const proxyConfig = proxies[i].trim();
         await interactWithContract(privateKey, proxyConfig);
+
+        // Generate a random time delay between 30 to 120 seconds
+        const randomDelay = Math.floor(Math.random() * (120 - 30 + 1) + 30);
+        await new Promise(resolve => setTimeout(resolve, randomDelay * 1000));
     }
 }
 
