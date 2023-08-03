@@ -25,8 +25,16 @@ const sendMailFragment = {
 };
 
 async function interactWithContract(privateKey, proxyConfig) {
-    const proxy = new SocksProxyAgent(proxyConfig);
-    const provider = new ethers.providers.JsonRpcProvider(process.env.RPC, { agent: proxy, chainId: 324 });
+    const providerOptions = {
+        chainId: 324
+    };
+
+    if (proxyConfig) {
+        const proxy = new SocksProxyAgent(proxyConfig);
+        providerOptions.agent = proxy;
+    }
+
+    const provider = new ethers.providers.JsonRpcProvider(process.env.RPC, providerOptions);
     const wallet = new ethers.Wallet(privateKey, provider);
     const contract = new ethers.Contract(process.env.C_ADR, [sendMailFragment], wallet);
 
@@ -46,6 +54,7 @@ async function interactWithContract(privateKey, proxyConfig) {
         console.log('Success!\nHash:', receipt.transactionHash);
     } catch (error) {
         console.log('Error:', error);
+        return;
     }
 }
 
@@ -53,20 +62,20 @@ async function main() {
     const privateKeys = fs.readFileSync(privateKeysFile, 'utf8').trim().split('\n');
     const proxies = fs.readFileSync(proxiesFile, 'utf8').trim().split('\n');
 
-    if (privateKeys.length !== proxies.length) {
-        console.error('Add equal wallet - proxy quantity');
-        return;
-    }
 
     for (let i = 0; i < privateKeys.length; i++) {
         const privateKey = privateKeys[i].trim();
-        const proxyConfig = proxies[i].trim();
+        const proxyConfig = proxies[i] ? proxies[i].trim() : null;
         await interactWithContract(privateKey, proxyConfig);
 
-        // Generate a random time delay between 30 to 120 seconds
-        const randomDelay = Math.floor(Math.random() * (120 - 30 + 1) + 30);
-        await new Promise(resolve => setTimeout(resolve, randomDelay * 1000));
+        
+            // Generate a random time delay between 30 to 120 seconds
+            const randomDelay = Math.floor(Math.random() * (120 - 30 + 1) + 30);
+            await new Promise(resolve => setTimeout(resolve, randomDelay * 1000));
+        
     }
+    console.log('==DONE==');
 }
 
 main();
+
