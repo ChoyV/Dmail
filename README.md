@@ -3,7 +3,8 @@ This JS script sends email to a random gmail address for 0.2$ per tx in Zksync E
 
 Instruction:
 1) npm i ethers
-2) npm i npm install socks-proxy-agent
+2) npm i socks-proxy-agent
+3) npm i dotenv
 3) Set proxy to according file (HTTP)
 4) Set private keys 
 
