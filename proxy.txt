@@ -1,2 +1,2 @@
-Пример ниже: (1 строка = 1 прокси)
+Example below: (1 line = 1 proxy)
 socks://LOGIN:PASSWORD@666.107.27.88:7955
